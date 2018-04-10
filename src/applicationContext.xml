@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+ 
+   <bean id="user" class="com.entity.User">
+    <!-- property使用set方法给属性赋值 -->
+    <!-- <property name="name" value="张三"></property>
+    <property name="words" value="今天我们学习IoC"></property> -->
+   <!-- 根据构造方法的参数名进行赋值 -->
+   <!--  <constructor-arg name="name" value="张三"></constructor-arg>
+   		 <constructor-arg name="words" value="今天我们学习IoC"></constructor-arg>
+   -->
+   <!-- 根据构造方法的参数位置赋值 -->
+  <!--  <constructor-arg index="1" value="今天学Java"></constructor-arg>
+   <constructor-arg index="0" value="李四"></constructor-arg>
+   -->
+  <!-- 如果构造方法的参数类型完全不相同，可以使用按类型赋值 -->
+  <!--  <constructor-arg type="int" value="25"></constructor-arg>
+   <constructor-arg type="String" value="王五"></constructor-arg> -->
+   <!-- 严格按照参数顺序直接赋值 ，如果不指定类型
+   ，则默认按照String类型进行赋值,如果参数类型不是String
+   最好使用name或type指定参数-->
+   <constructor-arg value="张三"></constructor-arg>
+   <constructor-arg type="int" value="20"></constructor-arg>
+    <constructor-arg name="words" value="构造入参"></constructor-arg>
+   </bean>
+
+   <bean id="user1" class="com.entity.User"
+  p:name="张三" p:age="21" p:words="p命名空间" >
+   <!-- <property name="name" value="张三"></property>
+    <property name="words" value="今天我们学习IoC"></property> -->
+   </bean>
+
+   <bean id="user2" class="com.entity.User">
+    <property name="name" value="李四"></property>
+    <!-- 如果赋值时需要使用特殊字符，则必须使用转义符或文本输入 -->
+    <!-- <property name="words" value="5&6"></property> -->
+    <!-- <property name="words" value="5&lt;6"></property> -->
+    <property name="words">
+      <value>
+      <!-- 使用CDATA方式设置为文本数据 -->
+      	<![CDATA[5<6]]>
+      </value>
+    </property>
+   </bean>
+  <bean id="userDAO" class="com.dao.UserDAO"></bean>
+  <bean id="userService" class="com.service.UserService">
+   <!-- <property name="userDAO" ref="userDAO"></property> -->
+   <property name="userDAO">
+   <!-- 由于Spring配置文件可以在开发时使用多个配置文件
+   在运行时进行合并，bean可以在多个配置文件中寻找指定id的bean
+   local只会在当前配置文件中寻找指定id的bean -->
+   	<!-- <ref bean="userDAO"/> -->
+   <!-- 	<ref local="userDAO"/> -->
+    <!-- 如果确定需要引用的bean实例只在当前位置使用，不需要在其它地方使用
+    可以使用bean标签进行内部声明 -->
+     <bean class="com.dao.UserDAO"></bean>
+   </property>
+  </bean>
+
+  <bean id="userDAO1" class="com.dao.UserDAO">
+   <property name="userList">
+   <!-- 属性为集合，可以使用集合标签添加元素 -->
+   	<list>
+   	 <ref bean="user"/>
+   	 <ref bean="user1"/>
+   	 <ref bean="user2"/>
+   	 <bean class="com.entity.User">
+   	   <property name="name" value="aa" ></property>
+   	 </bean>
+   	</list>
+   </property>
+   <property name="map">
+    <map><!-- map使用键值对进行注入值 -->
+      <entry key="uname" value="zhangsan"></entry>
+      <entry key="upwd" value="12345"></entry>
+    </map>
+   </property>
+   </bean>
+   <bean id="user3" class="com.entity.User">
+    <property name="name">
+      <null></null> <!-- 使用null标签注入null值 -->
+    </property>
+    <property name="words">
+     <value></value><!-- 使用空的value标签注入空字符串 -->
+    </property>
+   </bean>
+
+
+
+
+</beans>
